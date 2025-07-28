@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "recite_flutter (Flutter iPhone 16)",
+            "program": "lib/main.dart",
+            "deviceId": "8239D1AA-D524-4E8C-8A91-8B1B0587109D",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "recite_flutter (Flutter iPhone SE (3rd generation))",
+            "program": "lib/main.dart",
+            "deviceId": "2E29B341-B95D-454C-9517-CFE684AD7BAB",
+            "request": "launch",
+            "type": "dart"
+        }
+    ]
+}
