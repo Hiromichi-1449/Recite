@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'counterPage.dart';
+import 'profilePage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,7 +14,7 @@ class _HomePageState extends State<HomePage> {
 
   final List<Widget> _pages = [
     CounterPage(),
-    Placeholder(), // Replace with your next page
+    ProfilePage(),
     Placeholder(), // Another page
   ];
 
