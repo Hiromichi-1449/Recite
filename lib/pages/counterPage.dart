@@ -85,7 +85,13 @@ class _CounterPageState extends State<CounterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 101, 49, 49),
+      backgroundColor: const Color(0xFF555B6E),
+      appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          foregroundColor: Colors.black,
+          title: Text("COUNTER"),
+          centerTitle: true
+        ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

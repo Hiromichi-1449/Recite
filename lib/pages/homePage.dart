@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:recite_flutter/pages/settingsPage.dart';
 import 'counterPage.dart';
 import 'profilePage.dart';
 
@@ -15,7 +16,7 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> _pages = [
     CounterPage(),
     ProfilePage(),
-    Placeholder(), // Another page
+    SettingsPage(), 
   ];
 
   void _onItemTapped(int index) {
