@@ -1,125 +1,107 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:math';
 
+/// ------------------------------------------------------------
+/// Shared state for recitation target/current/cycles (Riverpod)
+/// ------------------------------------------------------------
+class Recitation {
+  final int target;   // goal for one cycle
+  final int current;  // current count in the cycle
+  final int cycles;   // completed cycles
+  const Recitation({required this.target, this.current = 0, this.cycles = 0});
 
-class CounterPage extends StatefulWidget {
+  Recitation copyWith({int? target, int? current, int? cycles}) => Recitation(
+        target: target ?? this.target,
+        current: current ?? this.current,
+        cycles: cycles ?? this.cycles,
+      );
+}
+
+class RecitationController extends StateNotifier<Recitation> {
+  RecitationController() : super(const Recitation(target: 108));
+
+  void setTarget(int newTarget) {
+    // Reset current when target changes; keep cycles history.
+    state = state.copyWith(target: newTarget, current: 0);
+  }
+
+  void increment() {
+    final next = state.current + 1;
+    if (next >= state.target) {
+      state = state.copyWith(current: 0, cycles: state.cycles + 1);
+    } else {
+      state = state.copyWith(current: next);
+    }
+  }
+}
+
+final recitationProvider =
+    StateNotifierProvider<RecitationController, Recitation>(
+        (ref) => RecitationController());
+
+/// ------------------------------------------------------------
+/// Counter Page (uses the shared provider above)
+/// ------------------------------------------------------------
+class CounterPage extends ConsumerStatefulWidget {
   const CounterPage({super.key});
 
   @override
-  State<CounterPage> createState() => _CounterPageState();
+  ConsumerState<CounterPage> createState() => _CounterPageState();
 }
 
-class _CounterPageState extends State<CounterPage> {
-  int _count = 0;
-  int _completedCycles = 0;
-  static const int cycleTotal = 10;
-
+class _CounterPageState extends ConsumerState<CounterPage> {
   void _incrementCounter() {
-    setState(() {
-      _count = (_count + 1) % cycleTotal;
-      if (_count == 0) {
-        _completedCycles++;
-      }
-    });
-  }
-
-  Widget _buildTallyDisplay(int completedCycles) {
-    List<Row> rows = [];
-
-    int fiveCycles = completedCycles ~/ 5;
-    int oneCycle = completedCycles % 5;
-
-    // Group of full tally marks (正)
-    for (int i = 0; i < fiveCycles; i += 5) {
-      int chunkSize = (i + 5 < fiveCycles) ? 5 : fiveCycles - i;
-      List<Widget> completedRow = [];
-      for (int j = 0; j < chunkSize; j++) {
-        completedRow.add(const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 2),
-          child: Text(
-            '正',
-            style: TextStyle(fontSize: 30, color: Colors.orange),
-          ),
-        ));
-      }
-      rows.add(Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: completedRow,
-      ));
-    }
-
-    // Remaining single marks ('|')
-    if (oneCycle > 0) {
-      List<Widget> lineRow = [];
-      for (int i = 0; i < oneCycle; i++) {
-        lineRow.add(const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 3),
-          child: Text(
-            '|',
-            style: TextStyle(fontSize: 30, color: Colors.orange),
-          ),
-        ));
-      }
-      if (rows.isNotEmpty) {
-        rows[rows.length - 1] = Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ...rows.last.children,
-            ...lineRow,
-          ],
-        );
-      } else {
-        rows.add(Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: lineRow,
-        ));
-      }
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: rows,
-    );
+    ref.read(recitationProvider.notifier).increment();
   }
 
   @override
   Widget build(BuildContext context) {
+    final recite = ref.watch(recitationProvider);
+    final int cycleTotal = recite.target;
+    final int count = recite.current;
+    final int completedCycles = recite.cycles;
+
     return Scaffold(
       backgroundColor: const Color(0xFF555B6E),
       appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          foregroundColor: Colors.black,
-          title: Text("COUNTER"),
-          centerTitle: true
-        ),
+        backgroundColor: Colors.transparent,
+        foregroundColor: Colors.black,
+        title: const Text("COUNTER"),
+        centerTitle: true,
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-          GestureDetector(
-            onTap: _incrementCounter,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                CustomPaint(
-                  painter: CyclePainter(
-                    count: _count,
-                    cycleTotal: cycleTotal,
-                    backgroundColor: Colors.deepOrange,
-                    progressColor: Colors.lightGreen,
+            GestureDetector(
+              onTap: _incrementCounter,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  CustomPaint(
+                    painter: CyclePainter(
+                      count: count,
+                      cycleTotal: cycleTotal,
+                      backgroundColor: Colors.deepOrange,
+                      progressColor: Colors.lightGreen,
+                    ),
+                    size: const Size(250, 250),
                   ),
-                  size: const Size(250, 250),
-                ),
-                Text(
-                  '$_count',
-                  style: const TextStyle(color: Colors.white, fontSize: 36),
-                ),
-              ],
+                  Text(
+                    '$count',
+                    style: const TextStyle(color: Colors.white, fontSize: 36),
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: 20),
-          _buildTallyDisplay(_completedCycles),
+            const SizedBox(height: 20),
+            Text(
+              'Target: $cycleTotal   •   Cycles: $completedCycles',
+              style: const TextStyle(color: Colors.white70, fontSize: 16),
+            ),
+            const SizedBox(height: 8),
           ],
         ),
       ),
@@ -127,6 +109,7 @@ class _CounterPageState extends State<CounterPage> {
   }
 }
 
+/// Painter for the ring + progress arc (unchanged behavior)
 class CyclePainter extends CustomPainter {
   final int count;
   final int cycleTotal;

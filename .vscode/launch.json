@@ -1,6 +1,7 @@
 {
     "version": "0.2.0",
     "configurations": [
+
         {
             "name": "recite_flutter (Flutter iPhone 16)",
             "program": "lib/main.dart",

@@ -65,4 +65,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'recite-ee83e.firebasestorage.app',
     iosBundleId: 'com.example.reciteFlutter',
   );
+
 }
