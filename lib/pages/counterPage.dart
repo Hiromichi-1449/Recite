@@ -1,44 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:recite_flutter/recitation_state.dart';
 import 'dart:math';
 
-/// ------------------------------------------------------------
-/// Shared state for recitation target/current/cycles (Riverpod)
-/// ------------------------------------------------------------
-class Recitation {
-  final int target;   // goal for one cycle
-  final int current;  // current count in the cycle
-  final int cycles;   // completed cycles
-  const Recitation({required this.target, this.current = 0, this.cycles = 0});
-
-  Recitation copyWith({int? target, int? current, int? cycles}) => Recitation(
-        target: target ?? this.target,
-        current: current ?? this.current,
-        cycles: cycles ?? this.cycles,
-      );
-}
-
-class RecitationController extends StateNotifier<Recitation> {
-  RecitationController() : super(const Recitation(target: 108));
-
-  void setTarget(int newTarget) {
-    // Reset current when target changes; keep cycles history.
-    state = state.copyWith(target: newTarget, current: 0);
-  }
-
-  void increment() {
-    final next = state.current + 1;
-    if (next >= state.target) {
-      state = state.copyWith(current: 0, cycles: state.cycles + 1);
-    } else {
-      state = state.copyWith(current: next);
-    }
-  }
-}
-
-final recitationProvider =
-    StateNotifierProvider<RecitationController, Recitation>(
-        (ref) => RecitationController());
 
 /// ------------------------------------------------------------
 /// Counter Page (uses the shared provider above)

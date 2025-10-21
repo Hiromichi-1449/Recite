@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:recite_flutter/pages/counterPage.dart';
+import 'package:recite_flutter/recitation_state.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
 // NOTE: When you add your global state later, call it here.

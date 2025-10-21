@@ -5,17 +5,10 @@ class Recitation {
   final int current;
   final int cycles;
 
-  const Recitation({
-    required this.target,
-    this.current = 0,
-    this.cycles = 0,
-  });
+  const Recitation({ required this.target, this.current = 0, this.cycles = 0});
 
-  Recitation copyWith({
-    int? target,
-    int? current,
-    int? cycles,
-  }) {
+  Recitation copyWith({ int? target, int? current, int? cycles,}) 
+  {
     return Recitation(
       target: target ?? this.target,
       current: current ?? this.current,
