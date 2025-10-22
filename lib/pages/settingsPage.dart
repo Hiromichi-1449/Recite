@@ -62,6 +62,7 @@ Row(
               child: SizedBox(
                 height: 60, // slightly smaller looks cleaner
                 child: DropdownButton2<int?>(
+                  value: _selected,
                   isExpanded: true,
                   dropdownStyleData: DropdownStyleData
                   (
