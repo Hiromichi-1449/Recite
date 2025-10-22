@@ -17,8 +17,11 @@ class SettingsPage extends ConsumerStatefulWidget {
 
 class _SettingsPageState extends ConsumerState<SettingsPage> {
   static const preSetOptions = [21, 49, 108, 1080];
+  static const preSetCycleOptions = [1, 3, 5, 10, 20];
 
-  int? _selected; // null means "Custom…"
+  // null means "Custom…"
+  int? _selected; 
+  int? _selectedCycles; 
 
   @override
   void dispose() {
@@ -29,10 +32,15 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     ref.read(recitationProvider.notifier).setTarget(value);
   }
 
+  void _applyCycleGoal(int value) {
+    ref.read(recitationProvider.notifier).setCycleGoal(value);
+  }
+
   @override
   Widget build(BuildContext context) {
     final recite = ref.watch(recitationProvider);
     _selected = preSetOptions.contains(recite.target) ? recite.target : null;
+    _selectedCycles = preSetCycleOptions.contains(recite.cycles) ? recite.cycles : null;
     return Scaffold(
       backgroundColor: const Color(0xFF555B6E),
       appBar: AppBar(
@@ -52,7 +60,7 @@ Row(
             Expanded(
               flex: 2, // adjust how much space the title takes
               child: Text(
-                'Cycle Target:',
+                'Target:',
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ),
@@ -92,7 +100,49 @@ Row(
             ),
           ],
         ),
+        const SizedBox(height: 16),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              flex: 2,
+              child: Text(
+                'Cycles:',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              flex: 2,
+              child: SizedBox(
+                height: 60,
+                child: DropdownButton2<int?> (
+                  isExpanded: true,
+                  dropdownStyleData: DropdownStyleData(
+                    decoration: BoxDecoration(
+                      color: Colors.blueGrey,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  value: _selectedCycles,
+                  items: [
+                    ...preSetCycleOptions.map(
+                      (v) => DropdownMenuItem<int?>(
+                        value: v,
+                        child: Text('$v'),
+                      ),
+                    ),
+                  ],
+                  onChanged: (val) {
+                    setState(() => _selectedCycles = val);
+                    if (val != null) { _applyCycleGoal(val); }
+                  },
+                ),
+              ),
+            ),
           ],
+        ),
+        ],
         ),
       ),
     );
