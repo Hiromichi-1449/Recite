@@ -60,7 +60,7 @@ Row(
             Expanded(
               flex: 2, // adjust how much space the title takes
               child: Text(
-                'Target:',
+                'Target/cycle:',
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ),
@@ -100,49 +100,49 @@ Row(
             ),
           ],
         ),
-        const SizedBox(height: 16),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-              flex: 2,
-              child: Text(
-                'Cycles:',
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              flex: 2,
-              child: SizedBox(
-                height: 60,
-                child: DropdownButton2<int?> (
-                  isExpanded: true,
-                  dropdownStyleData: DropdownStyleData(
-                    decoration: BoxDecoration(
-                      color: Colors.blueGrey,
-                      borderRadius: BorderRadius.circular(8),
+            const SizedBox(height: 16),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: Text(
+                    'Cycles:',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  flex: 2,
+                  child: SizedBox(
+                    height: 60,
+                    child: DropdownButton2<int?> (
+                      isExpanded: true,
+                      dropdownStyleData: DropdownStyleData(
+                        decoration: BoxDecoration(
+                          color: Colors.blueGrey,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      value: _selectedCycles,
+                      items: [
+                        ...preSetCycleOptions.map(
+                          (v) => DropdownMenuItem<int?>(
+                            value: v,
+                            child: Text('$v'),
+                          ),
+                        ),
+                      ],
+                      onChanged: (val) {
+                        setState(() => _selectedCycles = val);
+                        if (val != null) { _applyCycleGoal(val); }
+                      },
                     ),
                   ),
-                  value: _selectedCycles,
-                  items: [
-                    ...preSetCycleOptions.map(
-                      (v) => DropdownMenuItem<int?>(
-                        value: v,
-                        child: Text('$v'),
-                      ),
-                    ),
-                  ],
-                  onChanged: (val) {
-                    setState(() => _selectedCycles = val);
-                    if (val != null) { _applyCycleGoal(val); }
-                  },
                 ),
-              ),
+              ],
             ),
           ],
-        ),
-        ],
         ),
       ),
     );

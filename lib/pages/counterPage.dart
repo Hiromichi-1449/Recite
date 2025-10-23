@@ -15,8 +15,8 @@ class CounterPage extends ConsumerStatefulWidget {
 }
 
 class _CounterPageState extends ConsumerState<CounterPage> {
-  void _incrementCounter() {
-    ref.read(recitationProvider.notifier).increment();
+  void _cycleTap() {
+    ref.read(recitationProvider.notifier).handleRecitationTap();
   }
 
   @override
@@ -40,7 +40,7 @@ class _CounterPageState extends ConsumerState<CounterPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             GestureDetector(
-              onTap: _incrementCounter,
+              onTap: _cycleTap,
               child: Stack(
                 alignment: Alignment.center,
                 children: [
@@ -62,7 +62,7 @@ class _CounterPageState extends ConsumerState<CounterPage> {
             ),
             const SizedBox(height: 20),
             Text(
-              'Target: $cycleTotal   •   Cycles: $completedCycles',
+              'Target/cycle: $cycleTotal   •   Cycles: $completedCycles',
               style: const TextStyle(color: Colors.white70, fontSize: 16),
             ),
             const SizedBox(height: 8),

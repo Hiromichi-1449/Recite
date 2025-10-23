@@ -28,11 +28,14 @@ class RecitationController extends StateNotifier<Recitation> {
     state = state.copyWith(cycles: newCycleGoal);
   }
 
-  void increment() {
-    if (state.current + 1 >= state.target) {
-      state = state.copyWith(current: 0, cycles: state.cycles + 1);
+  void handleRecitationTap() {
+    final next = state.current + 1;
+    if (next >= state.target) {
+      // finished a cycle: reset current, decrement remaining cycles
+      final remaining = state.cycles > 0 ? state.cycles - 1 : 0;
+      state = state.copyWith(current: 0, cycles: remaining);
     } else {
-      state = state.copyWith(current: state.current + 1);
+      state = state.copyWith(current: next);
     }
   }
 }
